@@ -1,0 +1,25 @@
+I used OpenAI's GPT-4o LLM as help for
+1. Debugging starting the Erlang HTTP server
+2. Starting the Haskell program in a container
+3. Converting my Docker Compose V2 yml file to be V1 compatible and
+4. Trying to switch the Haskell package management tool from the very slow Cabal to Stack.
+
+How did it help:
+For the first point, the LLM surprisingly pinpointed the problem very quickly, as the solution to my problem was not
+mentioned even in the documentation of the HTTP server. (server.erl line 14, where the current module is specified.
+I did not find this configuration line in any material I found online. "modules" was used only for externally loaded modules.)
+
+The LLM was also efficient in solving my problems with trying to run the compiled Haskell program. Somehow I could not
+get it to run without the suggested "hacky" way of running the Haskell interactive shell and using a script to start the program there.
+
+For trivial tasks, like converting the Docker Compose configuration to be backwards compatible, the LLM was precise.
+(By the way, 'docker compose' should be used over 'docker-compose', since Compose V1 is deprecated.)
+
+Mistakes/what was not provided:
+The service takes way more than 10 seconds to start up (~100s on my machine). I found out this was mainly due to a bug in the cabal package
+management tool for Haskell, which makes updating the package list extremely slow and I needed some non-default packages for
+implementing the Service2 of this task in Haskell. I tried to ask the LLM about optimizing this, to which it suggested switching from
+Cabal to Stack, another tool which does package management. However, Stack is greatly more complex and the LLM was not able to provide
+any useful output, and I would have had to sink many more hours to this for manual debugging and configuration.
+
+I really hope the extreme startup time does not completely nullify my points, since I could have switched to some very easy language for this.

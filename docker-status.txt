@@ -1,0 +1,11 @@
+docker container ls:
+CONTAINER ID   IMAGE                COMMAND                  CREATED         STATUS          PORTS                                       NAMES
+3d6579c053a7   devops_e3_service1   "erl -noshell -run s…"   9 minutes ago   Up 53 seconds   0.0.0.0:8199->8199/tcp, :::8199->8199/tcp   devops_e3_service1_1
+bbe5f858a381   devops_e3_service2   "ghci"                   9 minutes ago   Up 53 seconds   8200/tcp                                    devops_e3_service2_1
+
+docker network ls:
+NETWORK ID     NAME                DRIVER    SCOPE
+abd591d61d20   bridge              bridge    local
+80a8cff55ca4   devops_e3_default   bridge    local
+88f432a272fb   host                host      local
+bb56543f8a29   none                null      local
