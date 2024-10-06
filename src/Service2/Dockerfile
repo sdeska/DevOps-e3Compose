@@ -1,13 +1,14 @@
-FROM haskell AS build
+FROM haskell
 
 WORKDIR /app
 COPY info_service.hs .
 COPY .ghci .
 
+# The Haskell program needs the specified packages, which makes the app start a pillion times slower.
 RUN cabal update
 RUN cabal install --package-env . --lib network utf8-string process
-# RUN ghc -o info_service info_service.hs
 
+# The command ps is not included in the haskell image
 RUN apt-get update && apt-get install -y procps
 
 EXPOSE 8200
