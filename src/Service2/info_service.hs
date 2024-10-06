@@ -1,37 +1,44 @@
 import System.Process (readProcess)
-import Network (listenOn, accept, PortID(..), Socket)
-import System.IO (Handle)
+import Data.ByteString.UTF8 as BS
+import Network.Socket
+import Network.Socket.ByteString (sendAll)
 
 port :: String
 port = "8199"
 
-getHostname String ()
 getHostname =
-	readProcess "hostname" ["-i"]
+  readProcess "hostname" ["-i"] []
 
-getProcesses String ()
 getProcesses =
-	readProcess "ps" ["-ax"]
+  readProcess "ps" ["-ax"] []
 
-getFilesystem String ()
 getFilesystem =
-	readProcess "df"
+  readProcess "df" [] []
 
-getUptime String ()
 getUptime =
-	readProcess "cat /proc/uptime | awk '{print $1}'"
+  readProcess "cat /proc/uptime | awk '{print $1}'" [] []
 
-getResponse String ()
-getResponse =
-	getHostName ++ getProcesses ++ getFilesystem ++ getUptime
+getResponse = do
+  hostStr <- getHostname
+  processStr <- getProcesses
+  fileStr <- getFilesystem
+  upStr <- getUptime
+  return $ hostStr ++ processStr ++ fileStr ++ upStr
 
 listeningLoop :: Socket -> IO ()
-listeningLoop socket =
-	(handle, _, _) <- accept socket
-	getResponse handle
-	sockHandler socket
+listeningLoop sock = do
+  conn <- accept sock
+  respond conn
+  listeningLoop sock
+
+respond :: (Socket, SockAddr) -> IO ()
+respond (sock, _) = do
+  responseString <- getResponse
+  sendAll sock (BS.fromString responseString)
 
 main :: IO ()
 main = do
-	socket <- listenOn $ PortNumber port
-	listeningLoop socket
+  sock <- socket AF_INET Stream 0
+  bind sock (SockAddrInet (read port) 0)
+  listen sock 1
+  listeningLoop sock
