@@ -33,7 +33,7 @@ do(_Request) ->
 
 get_info() ->
 	LocalInfo = gather_info(local),
-	OtherInfo = [],%gather_info(service2),
+	OtherInfo = gather_info(service2),
 	LocalInfo ++ OtherInfo.
 
 gather_info(Target) ->
@@ -45,9 +45,20 @@ gather_info(Target) ->
 			Boot = os:cmd("cat /proc/uptime | awk '{print $1}'"),
 			io_lib:format("Service1~n\t- ~s~n\t- ~s~n\t- ~s~n\t- ~s~n", [Ip, Processes, Disk, Boot]);
 		service2 ->
-			% Underscore before variable name "ignores" the variable as unused.
-			{ok, {{_Version, 200, _Reason}, _Headers, Body}} = httpc:request("http://service2"),
-			io_lib:format("~p", [Body]);
+			{ok, Socket} = gen_tcp:connect("Service2", ?PORT, [{active, false}, {packet, 2}]),
+			case gen_tcp:connect("Service2", ?PORT, [{active, false}, {packet, 2}]) of
+				{ok, Socket} ->
+					io:format("Successfully connected to Service2 with socket: ~p~n", [Socket]);
+				{error, Reason} ->
+					io:format("Connection to Service2 failed with reason: ~p~n", [Reason])
+			end,
+			case gen_tcp:recv(Socket, 0) of
+				{ok, Packet} ->
+					io:format("Received packet: ~p~n", [Packet]),
+					io_lib:format("~s", [Packet]);
+				{error, Reason2} ->
+					io:format("Error while receiving data, reason: ~p~n", [Reason2])
+			end;
 		_ ->
 			"Error"
 	end.
