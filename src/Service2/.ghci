@@ -1,0 +1,4 @@
+:set prompt ""
+:load info_service.hs
+main
+:quit

@@ -1,0 +1,17 @@
+services:
+  service1:
+    build: src/Service1/
+    ports:
+      - "8199:8199"
+    networks:
+      - backend
+    depends_on: [service2]
+  service2:
+    build: src/Service2/
+    ports:
+      - "8200:8200"
+    networks:
+      - backend
+
+networks:
+  backend:
