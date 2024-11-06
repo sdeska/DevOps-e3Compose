@@ -2,12 +2,31 @@ services:
   service1:
     build:
       context: src/Service1/
-    ports:
-      - "8199:8199"
+    environment:
+      - PORT=8199
     depends_on:
-      - service2 # This ensures that service2 is started first.
+      - service2
+    deploy:
+      replicas: 3
+    networks:
+      - loadbalancing
   service2:
     build:
       context: src/Service2/
-    expose: # Here expose is used instead of ports, since the host machine does not need direct access to service2.
-      - "8200"
+    container_name: service2
+    environment:
+      - PORT=8200
+  nginx:
+    build: 
+      context: src/nginx/
+    container_name: nginx
+    ports:
+      - "8198:8198"
+    networks:
+      - loadbalancing
+    depends_on:
+      - service1
+      - service2
+
+networks:
+  loadbalancing:
