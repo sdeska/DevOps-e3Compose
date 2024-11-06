@@ -40,7 +40,7 @@ gather_info(Target) ->
 			Boot = os:cmd("cat /proc/uptime | awk '{print $1}'"),
 			io_lib:format("Service~n\t- ~s\t- ~s\t- ~s\t- ~s", [Ip, Processes, Disk, Boot]);
 		service2 ->
-			case gen_tcp:connect("service2", ?SERVICE2_PORT, [{active, false}, {packet, 0}]) of
+			case gen_tcp:connect("Service2", ?SERVICE2_PORT, [{active, false}, {packet, 0}]) of
 				{ok, Socket} ->
 					io:format("Successfully connected to Service2 with socket: ~p~n", [Socket]),
 					receive_tcp(Socket);

@@ -10,12 +10,15 @@ services:
       replicas: 3
     networks:
       - loadbalancing
+      - backend
   service2:
     build:
       context: src/Service2/
     container_name: service2
     environment:
       - PORT=8200
+    networks:
+      - backend
   nginx:
     build: 
       context: src/nginx/
@@ -29,4 +32,5 @@ services:
       - service2
 
 networks:
+  backend:
   loadbalancing:
