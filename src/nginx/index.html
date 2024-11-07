@@ -21,6 +21,7 @@
 			fetch('/request')
 				.then(response => response.text())
 				.then(data => {
+					// Updating the text box
 					const box = document.getElementById('box');
 					box.value = data;
 					box.style.height = "";
@@ -28,7 +29,8 @@
 				});
 		}
 		function stop() {
-			
+			// Calling stop_listener through the nginx.conf location.
+			fetch('/stop', {method: 'post'});
 		}
 	</script>
 
