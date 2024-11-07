@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		#box { /* Nicely resizes the text box so that the whole response is shown */
+			width: 100%;
+			height: auto;
+			resize: vertical;
+			white-space: pre-wrap;
+		}
+	</style>
+</head>
+<body>
+
+	<button onclick="request()">REQUEST</button>
+	<button onclick="stop()">STOP</button>
+	<textarea type="text" id="box" placeholder="Behold, empty text area" readonly wrap="soft"></textarea>
+
+	<script>
+		function request() {
+			fetch('/request')
+				.then(response => response.text())
+				.then(data => {
+					const box = document.getElementById('box');
+					box.value = data;
+					box.style.height = "";
+					box.style.height = box.scrollHeight + "px";
+				});
+		}
+		function stop() {
+			
+		}
+	</script>
+
+</body>
+</html>
