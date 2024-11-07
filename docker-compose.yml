@@ -9,7 +9,6 @@ services:
     deploy:
       replicas: 3
     networks:
-      - loadbalancing
       - backend
   service2:
     build:
@@ -26,11 +25,10 @@ services:
     ports:
       - "8198:8198"
     networks:
-      - loadbalancing
+      - backend
     depends_on:
       - service1
       - service2
 
 networks:
   backend:
-  loadbalancing:
