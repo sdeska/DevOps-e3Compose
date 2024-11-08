@@ -1,11 +1,15 @@
 docker container ls:
-CONTAINER ID   IMAGE                COMMAND                  CREATED         STATUS          PORTS                                       NAMES
-3d6579c053a7   devops_e3_service1   "erl -noshell -run s…"   9 minutes ago   Up 53 seconds   0.0.0.0:8199->8199/tcp, :::8199->8199/tcp   devops_e3_service1_1
-bbe5f858a381   devops_e3_service2   "ghci"                   9 minutes ago   Up 53 seconds   8200/tcp                                    devops_e3_service2_1
+CONTAINER ID   IMAGE                     COMMAND                  CREATED          STATUS          PORTS                                               NAMES
+696720bb59a6   devops_e3-nginx           "/docker-entrypoint.…"   13 seconds ago   Up 11 seconds   80/tcp, 0.0.0.0:8198->8198/tcp, :::8198->8198/tcp   nginx
+5b0eb3bc698e   devops_e3-service1        "erl -noshell -run s…"   13 seconds ago   Up 12 seconds                                                       devops_e3-service1-1
+416e7ff9d180   devops_e3-service1        "erl -noshell -run s…"   13 seconds ago   Up 12 seconds                                                       devops_e3-service1-2
+2b17cb95033e   devops_e3-service1        "erl -noshell -run s…"   13 seconds ago   Up 12 seconds                                                       devops_e3-service1-3
+3c1fec1117a1   devops_e3-service2        "ghci"                   13 seconds ago   Up 12 seconds   8200/tcp                                            service2
+7bfa5d1a368e   devops_e3-stop_listener   "flask run --host=0.…"   13 seconds ago   Up 12 seconds   22222/tcp                                           devops_e3-stop_listener-1
 
 docker network ls:
 NETWORK ID     NAME                DRIVER    SCOPE
-abd591d61d20   bridge              bridge    local
-80a8cff55ca4   devops_e3_default   bridge    local
+438dcd5e16b4   bridge              bridge    local
+5f61049419a4   devops_e3_backend   bridge    local
 88f432a272fb   host                host      local
 bb56543f8a29   none                null      local
