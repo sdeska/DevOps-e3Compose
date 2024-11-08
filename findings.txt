@@ -1,4 +1,0 @@
-
-The uptime from /proc/uptime is the same as on the host machine.
-The containers use IP addresses from the Docker network, so the address is not shared with the host.
-Nothing else seems to be shared between the systems.
