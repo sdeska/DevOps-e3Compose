@@ -1,14 +1,17 @@
 build-job:
     stage: build
+    tags: [build]
     script:
         - echo "Build"
 
 test-job:
     stage: test
+    tags: [test]
     script:
         - echo "Test"
 
 deploy-job:
     stage: deploy
+    tags: [deploy]
     script:
         - echo "Deploy"
