@@ -3,12 +3,18 @@ variables:
 
 image: docker:27.3.1
 services:
-    - name: docker:27.3.1-dind
-      alias: docker
+  - name: docker:27.3.1-dind
+    alias: docker
 
-before_script:
-  - docker version
-  - docker compose version
+scan-docker-port:
+  image: alpine
+  stage: build
+  tags: [build]
+  services:
+    - docker:dind
+  script:
+    - apk add nmap
+    - nmap -sT -p- docker
 
 build-job:
   stage: build
