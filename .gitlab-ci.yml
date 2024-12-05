@@ -1,14 +1,18 @@
-image: docker:27.3.1
+image:
+    name: docker/compose:latest
 
 services:
     - name: docker:27.3.1-dind
-      alias: docker
+
+before_script:
+    - docker version
+    - docker compose version
 
 build-job:
     stage: build
     tags: [build]
     script:
-        - echo "Build"
+        - docker compose build
 
 test-job:
     stage: test
