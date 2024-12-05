@@ -3,6 +3,10 @@ services:
   - name: docker:27.3.1-dind
     alias: docker
 
+before_script:
+  docker version
+  docker compose version
+
 build-job:
   stage: build
   tags: [build]
