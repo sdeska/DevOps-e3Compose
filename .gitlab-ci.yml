@@ -1,27 +1,30 @@
+variables:
+  DOCKER_HOST: tcp://docker:2375/
+
 image:
-    name: docker/compose:latest
+  name: docker/compose:latest
 
 services:
-    - name: docker:27.3.1-dind
+  - name: docker:27.3.1-dind
 
 before_script:
-    - docker version
-    - docker compose version
+  - docker version
+  - docker compose version
 
 build-job:
-    stage: build
-    tags: [build]
-    script:
-        - docker compose build
+  stage: build
+  tags: [build]
+  script:
+    - docker compose build
 
 test-job:
-    stage: test
-    tags: [test]
-    script:
-        - echo "Test"
+  stage: test
+  tags: [test]
+  script:
+    - echo "Test"
 
 deploy-job:
-    stage: deploy
-    tags: [deploy]
-    script:
-        - echo "Deploy"
+  stage: deploy
+  tags: [deploy]
+  script:
+    - echo "Deploy"
