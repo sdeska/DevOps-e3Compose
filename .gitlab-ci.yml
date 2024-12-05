@@ -4,8 +4,8 @@ services:
     alias: docker
 
 before_script:
-  docker version
-  docker compose version
+  - docker version
+  - docker compose version
 
 build-job:
   stage: build
