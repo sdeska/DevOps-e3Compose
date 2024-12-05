@@ -6,16 +6,6 @@ services:
   - name: docker:27.3.1-dind
     alias: docker
 
-scan-docker-port:
-  image: alpine
-  stage: build
-  tags: [build]
-  services:
-    - docker:dind
-  script:
-    - apk add nmap
-    - nmap -sT -p- docker
-
 build-job:
   stage: build
   tags: [build]
