@@ -1,4 +1,4 @@
-FROM haskell
+FROM haskell:9.10.1-slim-bullseye
 
 WORKDIR /app
 COPY info_service.hs .

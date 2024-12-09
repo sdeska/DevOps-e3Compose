@@ -4,6 +4,7 @@ import sys
 
 # A very simple Python script which waits for a REST request.
 # Once received, stops all running containers on the host machine.
+# In real use would need some quite rigorous authorization to avoid misuse.
 
 app = Flask(__name__)
 
