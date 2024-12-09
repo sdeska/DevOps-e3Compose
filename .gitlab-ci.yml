@@ -23,7 +23,7 @@ test-service2-job:
   tags: [test]
   script:
     - docker image ls
-    - docker run --rm -p 8200:8200 devops-project-esa-service2 &
+    - docker run --rm -p -d 8200:8200 devops-project-esa-service2 &
     - curl telnet://localhost:8200 | grep "Service2"
 
 deploy-job:
