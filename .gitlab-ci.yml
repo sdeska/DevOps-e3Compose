@@ -23,9 +23,10 @@ test-service2-job:
   tags: [test]
   script:
     - docker image ls
-    - docker run --rm -p 8200:8200 devops-project-esa-service2 &
+    - docker run --name s2-test --rm -p 8200:8200 devops-project-esa-service2 &
     - sleep 5
     - curl telnet://localhost:8200 | grep "Service2"
+    - docker stop s2-test
 
 deploy-job:
   stage: deploy
