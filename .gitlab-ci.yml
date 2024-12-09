@@ -22,6 +22,7 @@ test-service2-job:
   stage: test
   tags: [test]
   script:
+    - docker image ls
     - docker run --rm -p 8200:8200 devops_e3-service2 &
     - curl telnet://localhost:8200 | grep "Service2"
 
