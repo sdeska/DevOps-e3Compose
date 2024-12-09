@@ -4,7 +4,7 @@ WORKDIR /app
 COPY info_service.hs .
 COPY .ghci .
 
-# The Haskell program needs the specified packages, which makes the app start a pillion times slower.
+# The Haskell program needs the specified packages, which makes the app start a billion times slower.
 RUN cabal update
 RUN cabal install --package-env . --lib network utf8-string process
 

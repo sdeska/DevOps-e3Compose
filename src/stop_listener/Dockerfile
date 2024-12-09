@@ -1,10 +1,8 @@
-FROM python:3.13
-RUN apt-get update && apt-get install -y \
-	docker \
-	docker-compose \
-	&& rm -rf /var/lib/apt/lists/*
+FROM python:3.13-alpine
+RUN apk add --no-cache \
+	docker-cli
 WORKDIR /stop_listener
 COPY ./src/stop_listener/app.py .
-RUN pip install flask
+RUN pip install --no-cache-dir flask
 EXPOSE 22222
 CMD ["flask", "run", "--host=0.0.0.0", "--port=22222"]
