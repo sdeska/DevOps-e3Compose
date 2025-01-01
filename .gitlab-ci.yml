@@ -18,6 +18,17 @@ build-job:
   script:
     - docker compose build
 
+test-service1-job:
+  stage: test
+  tags: [test]
+  script:
+    - docker image ls
+    - docker run --name s1-test --rm -p 8199:8199 devops-project-esa-service1 &
+    - sleep 5
+    - curl telnet://localhost:8199 | grep "Service1"
+
+# Testing service2 by starting it in a container, exposing port 8200, curling the service
+# and verifying that the response has something legible ("Service2").
 test-service2-job:
   stage: test
   tags: [test]
