@@ -25,7 +25,7 @@ build-job:
 #     - docker image ls
 #     - docker run --name s1-test --rm -p 8199:8199 devops-project-esa-service1 &
 #     - sleep 5
-#     - curl telnet://localhost:8199 | grep "Service1"
+#     - curl telnet://localhost:8199 | grep "Service1:"
 #     - docker stop s1-test
 
 # Testing service2 by starting it in a container, exposing port 8200, curling the service
@@ -37,7 +37,7 @@ test-service2-job:
     - docker image ls
     - docker run --name s2-test --rm -p 8200:8200 devops-project-esa-service2 &
     - sleep 5
-    - curl telnet://localhost:8200 | grep "Service2"
+    - curl telnet://localhost:8200 | grep "Service2:"
     - docker stop s2-test
 
 test-e2e:
@@ -46,7 +46,11 @@ test-e2e:
   script:
     - docker compose up -d
     - sleep 5
-    - echo $(curl http://localhost:8198)
+    - EXPECTED=("Service1:" "Service2:" "Filesystem" "PID" "TTY" "STAT" "COMMAND")
+    - RESPONSE=$(curl --netrc-file login-curl.txt http://localhost:8198/request)
+    - for STR in "${EXPECTED[@]}"; do
+        echo "$RESPONSE" | grep -q "$STR" || { echo "Response missing expected string: $STR" >&2; docker compose down; exit 1; }
+      done
     - docker compose down
 
 deploy-job:

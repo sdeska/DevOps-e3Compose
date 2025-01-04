@@ -1,0 +1,1 @@
+machine localhost login exerciseuser password *$spu2s9KJmH%qfTBq6&
