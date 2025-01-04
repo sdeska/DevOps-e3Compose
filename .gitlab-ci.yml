@@ -40,6 +40,15 @@ test-service2-job:
     - curl telnet://localhost:8200 | grep "Service2"
     - docker stop s2-test
 
+test-e2e:
+  stage: test
+  tags: [test]
+  script:
+    - docker compose up -d
+    - sleep 5
+    - echo $(curl http://localhost:8198)
+    - docker compose down
+
 deploy-job:
   stage: deploy
   tags: [deploy]
