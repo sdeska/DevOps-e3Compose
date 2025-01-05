@@ -49,13 +49,7 @@ test-e2e:
     - >
       EXPECTED=("Service1:" "Service2:" "Filesystem" "PID" "TTY" "STAT" "COMMAND")
       RESPONSE=$(curl --netrc-file login-curl.txt http://localhost:8198/request)
-      for STR in "${EXPECTED[@]}"; do
-      echo "$RESPONSE" | grep -q "$STR" || { \
-      echo "Response missing expected string: $STR" >&2 \
-      docker compose down \
-      exit 1 \
-      }
-      done
+      for STR in "${EXPECTED[@]}"; do echo "$RESPONSE" | grep -q "$STR" || { echo "Response missing expected string: $STR" >&2; docker compose down; exit 1 }; done
     - docker compose down
 
 deploy-job:
