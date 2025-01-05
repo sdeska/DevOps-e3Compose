@@ -5,6 +5,7 @@
 erl_crash.dump
 .concrete/DEV_MODE
 .ghc.*
+test-script.sh
 
 # rebar 2.x
 .rebar
