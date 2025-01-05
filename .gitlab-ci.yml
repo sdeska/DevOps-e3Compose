@@ -49,7 +49,7 @@ test-service2-job:
       echo "Service2 test successful"
     - docker stop s2-test
 
-test-e2e:
+test-request:
   stage: test
   tags: [test]
   script:
@@ -60,12 +60,30 @@ test-e2e:
       RESPONSE=$(curl --netrc-file login-curl.txt http://localhost:8198/request)
       for STR in "${EXPECTED[@]}"; do
         if [[ ! "$RESPONSE" =~ "$STR" ]]; then
-          echo "Response missing expected string '$STR'"
+          echo "Failed: Response missing expected string '$STR'"
           docker compose down
           exit 1
         fi
       done
-      echo "Test successful"
+      echo "Request test successful"
+
+test-stop:
+  stage: test
+  tags: [test]
+  script:
+    - curl -X POST --netrc-file login-curl.txt http://localhost:8198/stop
+    - sleep 10
+    - |
+      UNEXPECTED=("devops-project-esa-nginx" "devops-project-esa-service1" "devops-project-esa-service2" "devops-project-esa-stop_listener")
+      ACTUAL=$(docker container ls)
+      for STR in "${UNEXPECTED[@]}"; do
+        if [[ "$ACTUAL" =~ "$STR" ]]; then
+          echo "Failed: Image '$STR' has an active container"
+          docker compose down
+          exit 1
+        fi
+      done
+      echo "Stop test successful"
     - docker compose down
 
 deploy-job:
