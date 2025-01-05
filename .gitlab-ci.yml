@@ -34,10 +34,19 @@ test-service2-job:
   stage: test
   tags: [test]
   script:
-    - docker image ls
     - docker run --name s2-test --rm -p 8200:8200 devops-project-esa-service2 &
     - sleep 5
-    - curl telnet://localhost:8200 | grep "Service2:"
+    - |
+      EXPECTED=("Service2:" "Filesystem" "PID" "TTY" "STAT" "COMMAND")
+      RESPONSE=$(curl telnet://localhost:8200)
+      for STR in "${EXPECTED[@]}"; do
+        if [[ ! "$RESPONSE" =~ "$STR" ]]; then
+          echo "Response missing expected string '$STR'"
+          docker stop s2-test
+          exit 1
+        fi
+      done
+      echo "Service2 test successful"
     - docker stop s2-test
 
 test-e2e:
