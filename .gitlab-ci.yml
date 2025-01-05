@@ -39,14 +39,23 @@ test-service2-job:
       echo "Service2 test successful"
     - docker stop s2-test
 
-# Testing the /request endpoint of the API gateway.
-# It is checked that the response includes the names of the services and other expected contents.
-test-request:
+test-unauth-job:
   stage: test
   tags: [test]
   script:
     - docker compose up -d
     - sleep 5
+    - EXPECTED="401 Authorization Required"
+    - ACTUAL=$(curl http://localhost:8198/request)
+    - echo "$ACTUAL" | grep -q "$EXPECTED"
+    - echo "Unauth test successful"
+
+# Testing the /request endpoint of the API gateway.
+# It is checked that the response includes the names of the services and other expected contents.
+test-request-job:
+  stage: test
+  tags: [test]
+  script:
     - |
       EXPECTED=("Service1:" "Service2:" "Filesystem" "PID" "TTY" "STAT" "COMMAND")
       RESPONSE=$(curl --netrc-file login-curl.txt http://localhost:8198/request)
@@ -61,7 +70,7 @@ test-request:
 
 # Testing the /stop endpoint of the API gateway.
 # The test calls the /stop endpoint, waits for a moment, captures the output of `docker container ls`, and checks that no containers are running.
-test-stop:
+test-stop-job:
   stage: test
   tags: [test]
   script:
