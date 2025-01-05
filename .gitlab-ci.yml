@@ -19,7 +19,7 @@ build-job:
     - docker compose build
 
 # Testing service2 by starting it in a container, exposing port 8200, curling the service
-# and verifying that the response has something legible ("Service2").
+# and verifying that the response has something legible (name of the service and other expected output).
 test-service2-job:
   stage: test
   tags: [test]
@@ -31,7 +31,7 @@ test-service2-job:
       RESPONSE=$(curl telnet://localhost:8200)
       for STR in "${EXPECTED[@]}"; do
         if [[ ! "$RESPONSE" =~ "$STR" ]]; then
-          echo "Response missing expected string '$STR'"
+          echo "Failed: Response missing expected string '$STR'"
           docker stop s2-test
           exit 1
         fi
@@ -39,6 +39,8 @@ test-service2-job:
       echo "Service2 test successful"
     - docker stop s2-test
 
+# Testing the /request endpoint of the API gateway.
+# It is checked that the response includes the names of the services and other expected contents.
 test-request:
   stage: test
   tags: [test]
@@ -57,10 +59,14 @@ test-request:
       done
       echo "Request test successful"
 
+# Testing the /stop endpoint of the API gateway.
+# The test calls the /stop endpoint, waits for a moment, captures the output of `docker container ls`, and checks that no containers are running.
 test-stop:
   stage: test
   tags: [test]
   script:
+      # The curl command is suffixed with a tautology (|| true), because otherwise the pipeline fails as curl returns with exit code 52
+      # due to the server suddenly stopping, which is what we want in this case.
     - |
       curl -X POST --netrc-file login-curl.txt http://localhost:8198/stop || true
     - sleep 2
@@ -81,4 +87,4 @@ deploy-job:
   stage: deploy
   tags: [deploy]
   script:
-    - docker compose up -d
+    - docker compose up
