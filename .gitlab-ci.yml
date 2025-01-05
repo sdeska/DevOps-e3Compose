@@ -73,6 +73,7 @@ test-stop:
   script:
     - |
       curl -X POST --netrc-file login-curl.txt http://localhost:8198/stop || true
+    - sleep 2
     - |
       UNEXPECTED=("devops-project-esa-nginx" "devops-project-esa-service1" "devops-project-esa-service2" "devops-project-esa-stop_listener")
       ACTUAL=$(docker container ls)
