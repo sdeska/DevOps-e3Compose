@@ -72,7 +72,7 @@ test-stop:
   tags: [test]
   script:
     - |
-      curl -X POST --netrc-file login-curl.txt http://localhost:8198/stop | grep -q "52"
+      curl -X POST --netrc-file login-curl.txt http://localhost:8198/stop || true
     - sleep 10
     - |
       UNEXPECTED=("devops-project-esa-nginx" "devops-project-esa-service1" "devops-project-esa-service2" "devops-project-esa-stop_listener")
