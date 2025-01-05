@@ -71,7 +71,7 @@ test-stop:
   stage: test
   tags: [test]
   script:
-    - curl -X POST --netrc-file login-curl.txt http://localhost:8198/stop
+    - curl -H "Connection: close" -X POST --netrc-file login-curl.txt http://localhost:8198/stop
     - sleep 10
     - |
       UNEXPECTED=("devops-project-esa-nginx" "devops-project-esa-service1" "devops-project-esa-service2" "devops-project-esa-stop_listener")
