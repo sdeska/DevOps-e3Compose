@@ -46,18 +46,17 @@ test-e2e:
   script:
     - docker compose up -d
     - sleep 5
-    - bash -c '
-        EXPECTED=("Service1:" "Service2:" "Filesystem" "PID" "TTY" "STAT" "COMMAND")
-        RESPONSE=$(curl --netrc-file login-curl.txt http://localhost:8198/request)
-        for STR in "${EXPECTED[@]}"; do
-          if [[ ! "$RESPONSE" =~ "$STR" ]]; then
-            echo "Response missing expected string: $STR"
-            docker compose down
-            exit 1
-          fi
-        done
-        echo "Test successful"
-      '
+    - |
+      EXPECTED=("Service1:" "Service2:" "Filesystem" "PID" "TTY" "STAT" "COMMAND")
+      RESPONSE=$(curl --netrc-file login-curl.txt http://localhost:8198/request)
+      for STR in "${EXPECTED[@]}"; do
+        if [[ ! "$RESPONSE" =~ "$STR" ]]; then
+          echo "Response missing expected string '$STR'"
+          docker compose down
+          exit 1
+        fi
+      done
+      echo "Test successful"
     - docker compose down
 
 deploy-job:
