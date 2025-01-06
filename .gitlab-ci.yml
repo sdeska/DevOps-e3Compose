@@ -40,6 +40,7 @@ test-unauth-job:
 test-request-job:
   stage: test-services
   tags: [test]
+  needs: ['test-unauth-job']
   script:
     - ./tests/test-request.sh
 
@@ -48,6 +49,7 @@ test-request-job:
 test-stop-job:
   stage: test-services
   tags: [test]
+  needs: ['test-request-job']
   script:
     - ./tests/test-stop.sh
 
