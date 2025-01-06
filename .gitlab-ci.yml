@@ -5,13 +5,16 @@ services:
 
 stages:
   - build
-  - before-test
+  - before-test-services
   - test-services
-  - after-test
+  - after-test-services
+  - before-test-gateway
   - test-gateway
+  - after-test-gateway
   - deploy
 
 before_script:
+  - docker system prune -af
   - docker version
   - docker compose version
 
@@ -22,7 +25,7 @@ build-job:
     - docker compose build
 
 test-setup-job:
-  stage: before-test
+  stage: before-test-services
   tags: [test]
   script:
     - docker compose up -d
@@ -61,9 +64,27 @@ test-stop-job:
 
 # Make sure that docker compose is shut down.
 test-cleanup-job:
-  stage: after-test
+  stage: after-test-services
   tags: [test]
   when: always
+  script:
+    - docker compose down
+
+test-setup-job2:
+  stage: before-test-gateway
+  tags: [test]
+  script:
+    - docker compose up -d
+
+test-state-job:
+  stage: test-gateway
+  tags: [test]
+  script:
+    - ./tests/test-state.sh
+
+test-cleanup-job2:
+  stage: after-test-gateway
+  tags: [test]
   script:
     - docker compose down
 
