@@ -14,7 +14,6 @@ stages:
   - deploy
 
 before_script:
-  - docker system prune -af
   - docker version
   - docker compose version
 
@@ -22,6 +21,7 @@ build-job:
   stage: build
   tags: [build]
   script:
+    - docker system prune -af
     - docker compose build
 
 test-setup-job:
