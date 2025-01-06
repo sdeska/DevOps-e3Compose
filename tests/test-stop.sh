@@ -2,7 +2,7 @@
 
 # The curl command is suffixed with a tautology (|| true), because otherwise the pipeline fails as curl returns with exit code 52
 # due to the server suddenly stopping, which is what we want in this case.
-curl -X POST --netrc-file login-curl.txt http://localhost:8198/stop || true
+curl -X POST --netrc-file ./tests/login-curl.txt http://localhost:8198/stop || true
 sleep 2
 UNEXPECTED=("devops-project-esa-nginx" "devops-project-esa-service1" "devops-project-esa-service2" "devops-project-esa-stop_listener")
 ACTUAL=$(docker container ls)
