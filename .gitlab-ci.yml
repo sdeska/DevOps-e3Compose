@@ -5,7 +5,8 @@ services:
 
 stages:
   - build
-  - test
+  - test-services
+  - test-gateway
   - deploy
 
 before_script:
@@ -24,73 +25,31 @@ test-service2-job:
   stage: test
   tags: [test]
   script:
-    - docker run --name s2-test --rm -p 8200:8200 devops-project-esa-service2 &
-    - sleep 5
-    - |
-      EXPECTED=("Service2:" "Filesystem" "PID" "TTY" "STAT" "COMMAND")
-      RESPONSE=$(curl telnet://localhost:8200)
-      for STR in "${EXPECTED[@]}"; do
-        if [[ ! "$RESPONSE" =~ "$STR" ]]; then
-          echo "Failed: Response missing expected string '$STR'"
-          docker stop s2-test
-          exit 1
-        fi
-      done
-      echo "Service2 test successful"
-    - docker stop s2-test
+    - ./tests/test-service2.sh
 
+# Testing unauthorized requests.
+# Try to access through the API gateway without authorization and assert that the request fails.
 test-unauth-job:
-  stage: test
+  stage: test-services
   tags: [test]
   script:
-    - docker compose up -d
-    - sleep 5
-    - EXPECTED="401 Authorization Required"
-    - ACTUAL=$(curl http://localhost:8198/request)
-    - echo "$ACTUAL" | grep -q "$EXPECTED"
-    - echo "Unauth test successful"
+    - ./tests/test-unauth.sh
 
 # Testing the /request endpoint of the API gateway.
 # It is checked that the response includes the names of the services and other expected contents.
 test-request-job:
-  stage: test
+  stage: test-services
   tags: [test]
   script:
-    - |
-      EXPECTED=("Service1:" "Service2:" "Filesystem" "PID" "TTY" "STAT" "COMMAND")
-      RESPONSE=$(curl --netrc-file login-curl.txt http://localhost:8198/request)
-      for STR in "${EXPECTED[@]}"; do
-        if [[ ! "$RESPONSE" =~ "$STR" ]]; then
-          echo "Failed: Response missing expected string '$STR'"
-          docker compose down
-          exit 1
-        fi
-      done
-      echo "Request test successful"
+    - ./tests/test-request.sh
 
 # Testing the /stop endpoint of the API gateway.
 # The test calls the /stop endpoint, waits for a moment, captures the output of `docker container ls`, and checks that no containers are running.
 test-stop-job:
-  stage: test
+  stage: test-services
   tags: [test]
   script:
-      # The curl command is suffixed with a tautology (|| true), because otherwise the pipeline fails as curl returns with exit code 52
-      # due to the server suddenly stopping, which is what we want in this case.
-    - |
-      curl -X POST --netrc-file login-curl.txt http://localhost:8198/stop || true
-    - sleep 2
-    - |
-      UNEXPECTED=("devops-project-esa-nginx" "devops-project-esa-service1" "devops-project-esa-service2" "devops-project-esa-stop_listener")
-      ACTUAL=$(docker container ls)
-      for STR in "${UNEXPECTED[@]}"; do
-        if [[ "$ACTUAL" =~ "$STR" ]]; then
-          echo "Failed: Image '$STR' has an active container"
-          docker compose down
-          exit 1
-        fi
-      done
-      echo "Stop test successful"
-    - docker compose down
+    - ./tests/test-stop.sh
 
 deploy-job:
   stage: deploy
