@@ -22,7 +22,7 @@ build-job:
 # Testing service2 by starting it in a container, exposing port 8200, curling the service
 # and verifying that the response has something legible (name of the service and other expected output).
 test-service2-job:
-  stage: test
+  stage: test-services
   tags: [test]
   script:
     - ./tests/test-service2.sh
