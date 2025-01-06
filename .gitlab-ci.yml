@@ -5,7 +5,9 @@ services:
 
 stages:
   - build
+  - before-test
   - test-services
+  - after-test
   - test-gateway
   - deploy
 
@@ -18,6 +20,12 @@ build-job:
   tags: [build]
   script:
     - docker compose build
+
+test-setup-job:
+  stage: before-test
+  tags: [test]
+  script:
+    - docker compose up -d
 
 # Testing service2 by starting it in a container, exposing port 8200, curling the service
 # and verifying that the response has something legible (name of the service and other expected output).
@@ -40,7 +48,6 @@ test-unauth-job:
 test-request-job:
   stage: test-services
   tags: [test]
-  needs: ['test-unauth-job']
   script:
     - ./tests/test-request.sh
 
@@ -49,9 +56,16 @@ test-request-job:
 test-stop-job:
   stage: test-services
   tags: [test]
-  needs: ['test-request-job']
   script:
     - ./tests/test-stop.sh
+
+# Make sure that docker compose is shut down.
+test-cleanup-job:
+  stage: after-test
+  tags: [test]
+  when: always
+  script:
+    - docker compose down
 
 deploy-job:
   stage: deploy

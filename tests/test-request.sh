@@ -9,7 +9,6 @@ echo "$RESPONSE"
 for STR in "${EXPECTED[@]}"; do
     if [[ ! "$RESPONSE" =~ "$STR" ]]; then
         echo "Failed: Response missing expected string '$STR'"
-        docker compose down
         exit 1
     fi
 done
