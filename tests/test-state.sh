@@ -32,4 +32,10 @@ curl http://localhost:8197/state --netrc-file ./tests/login-curl.txt -X PUT -d "
 curl http://localhost:8197/state | grep "RUNNING"
 
 # Shutdown.
-curl http://localhost:8197/state -X PUT -d "SHUTDOWN" -H "Content-Type: text/plain" -H "Accept: text/plain" | grep "Empty reply from server"
+curl http://localhost:8197/state -X PUT -d "SHUTDOWN" -H "Content-Type: text/plain" -H "Accept: text/plain"
+exit_code=$?
+if [ $exit_code -eq 52 ]; then
+    exit 0
+else
+    exit 1
+fi
