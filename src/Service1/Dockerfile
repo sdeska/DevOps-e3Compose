@@ -7,4 +7,5 @@ WORKDIR /app
 COPY server.erl .
 RUN erlc server.erl
 
+LABEL shutdown=true
 ENTRYPOINT ["erl", "-noshell", "-run", "server"]

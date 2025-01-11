@@ -30,8 +30,6 @@ services:
       - service1
       - service2
       - stop_listener
-  # Using a small Python script to stop Docker containers on request.
-  # Could have used the service1 REST API as well, but Python is way simpler to set up.
   stop_listener:
     build:
       dockerfile: src/stop_listener/Dockerfile
@@ -39,8 +37,10 @@ services:
     # on the host machine. Scary.
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - PORT=22222
+    # Exposing port 8197 as this service handles the API for testing.
+    # This is also used for the stop requests for Nginx.
+    ports:
+      - "8197:8197"
     networks:
       - backend
 

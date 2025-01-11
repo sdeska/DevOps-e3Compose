@@ -12,4 +12,5 @@ RUN cabal install --package-env . --lib network utf8-string process
 RUN apt-get update && apt-get install -y procps
 
 EXPOSE 8200
+LABEL shutdown=true
 ENTRYPOINT ["ghci"]
