@@ -29,10 +29,10 @@ services:
     depends_on:
       - service1
       - service2
-      - stop_listener
-  stop_listener:
+      - controller
+  controller:
     build:
-      dockerfile: src/stop_listener/Dockerfile
+      dockerfile: src/controller/Dockerfile
     # Here we expose the Docker socket to the container so that Docker commands can be run
     # on the host machine. Scary.
     volumes:

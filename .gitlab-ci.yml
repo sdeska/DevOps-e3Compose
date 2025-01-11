@@ -21,7 +21,7 @@ build-job:
   stage: build
   tags: [build]
   script:
-    - docker system prune -af
+    # - docker system prune -af
     - docker compose build
 
 test-setup-job:
