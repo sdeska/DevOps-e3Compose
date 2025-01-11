@@ -78,8 +78,7 @@ def error_resp(code=400):
 
 @app.route("/stop", methods = ["POST"])
 def stop():
-	os.system("docker stop $(docker ps -a -q --filter label=shutdown)")
-	sys.exit()
+	os.system("docker stop $(docker ps -a -q)")
 
 if __name__ == "__main__":
 	app.run(host="0.0.0.0", port=8197)
