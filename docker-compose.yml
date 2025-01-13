@@ -24,6 +24,7 @@ services:
     container_name: nginx
     ports:
       - "8198:8198"
+      - "8197:8197"
     networks:
       - backend
     depends_on:
@@ -37,10 +38,8 @@ services:
     # on the host machine. Scary.
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    # Exposing port 8197 as this service handles the API for testing.
-    # This is also used for the stop requests for Nginx.
-    ports:
-      - "8197:8197"
+    environment:
+      - PORT=8197
     networks:
       - backend
 
